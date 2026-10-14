@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>나의 일기장</title>
+<meta name="description" content="나에게 집중하는 원고지 일기장">
+<meta name="theme-color" content="#F4F5F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12151B" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="일기장">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' blob: data:; font-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self' blob:; object-src 'none'; base-uri 'self'">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="app" id="app">
+  <div id="banners"></div>
+  <section class="view" id="v-home"></section>
+  <section class="view" id="v-list" hidden></section>
+  <section class="view" id="v-jp" hidden></section>
+  <section class="view" id="v-settings" hidden></section>
+  <section class="view" id="v-editor" hidden>
+    <div class="ebar">
+      <button class="icon" id="eBack" aria-label="뒤로"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <div class="status" id="eStatus" role="status" aria-live="polite">새 일기</div>
+      <button class="icon" id="eFav" aria-label="즐겨찾기" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z"/></svg></button>
+    </div>
+    <div class="card ehead">
+      <div><input class="datein" type="date" id="eDate" aria-label="날짜"><span class="wd" id="eWd"></span></div>
+      <input class="titlein" id="eTitle" type="text" maxlength="100" placeholder="제목 (선택)" autocomplete="off">
+      <div class="frow"><span>감정</span><div class="chips" id="eMood"></div></div>
+      <div class="frow"><span>날씨</span><div class="chips" id="eWeather"></div></div>
+      <div class="frow"><span>태그</span><div class="tagbox" id="eTags"><input class="tagin" id="eTagIn" type="text" maxlength="20" placeholder="태그 입력 후 Enter" autocomplete="off" enterkeyhint="done"></div></div>
+    </div>
+    <div class="card">
+      <h3>사진</h3>
+      <div class="photos" id="ePhotos"></div>
+      <input type="file" id="ePhotoIn" class="hidden-file" accept="image/*" multiple>
+      <div class="progress" id="ePhotoMsg" hidden></div>
+    </div>
+    <div class="card" style="display:grid;gap:10px">
+      <div class="btools">
+        <div class="seg" role="group" aria-label="보기 모드">
+          <button id="mGrid" aria-pressed="true">원고지</button>
+          <button id="mLines" aria-pressed="false">줄노트</button>
+        </div>
+        <span class="sp"></span>
+        <button class="icon" id="bUndo" aria-label="실행 취소"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button>
+        <button class="icon" id="bRedo" aria-label="다시 실행"><svg viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button>
+        <button class="icon" id="bCopy" aria-label="복사"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 012-2h9"/></svg></button>
+      </div>
+      <div class="bodybox" id="bodybox">
+        <div class="mgrid" id="mgrid" aria-hidden="true"></div>
+        <div class="caret" id="caret" hidden></div>
+        <div class="gridhint" id="gridhint" hidden>칸을 눌러 오늘의 이야기를 시작해 보세요.</div>
+        <textarea id="body" class="ghost" aria-label="일기 본문" spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="오늘의 이야기를 자유롭게 적어 보세요."></textarea>
+      </div>
+      <div class="count" id="eCount"></div>
+    </div>
+    <div class="danger-zone"><button class="linkbtn d" id="eDelete">이 일기 지우기</button></div>
+  </section>
+</div>
+
+<nav class="nav" id="nav" aria-label="메뉴">
+  <div class="in">
+    <button data-v="home" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>달력</button>
+    <button data-v="list"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>모아보기</button>
+    <button data-v="jp"><span class="ja-ic" lang="ja" aria-hidden="true">あ</span>일본어</button>
+    <button data-v="settings"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>설정</button>
+  </div>
+</nav>
+<div class="toast" id="toast" role="status" hidden></div>
+<div id="overlayRoot"></div>
+<input type="file" id="fontIn" class="hidden-file" accept=".ttf,.otf,font/ttf,font/otf">
+<input type="file" id="restoreIn" class="hidden-file" accept=".zip,.json,application/zip,application/json">
+
+<script src="phrases.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
